@@ -4,22 +4,27 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
+# ==================================
 # KONFIGURASI HALAMAN
+# ==================================
 st.set_page_config(
     page_title="Bike Sharing Dashboard",
     page_icon="🚲",
     layout="wide"
 )
 
+# ==================================
 # LOAD DATA
+# ==================================
 base_path = os.path.dirname(__file__)
 file_path = os.path.join(base_path, "main_data.csv")
 
 df = pd.read_csv(file_path)
 df["dteday"] = pd.to_datetime(df["dteday"])
 
-
-# BUAT TEMP_CATEGORY JIKA BELUM ADA
+# ==================================
+# BUAT KOLOM TEMP_CATEGORY JIKA BELUM ADA
+# ==================================
 if "temp_category" not in df.columns:
     bins = [0, 0.4, 0.7, 1]
     labels = ["Sangat Dingin", "Nyaman", "Panas"]
@@ -31,31 +36,74 @@ if "temp_category" not in df.columns:
         include_lowest=True
     )
 
+# ==================================
 # SIDEBAR
+# ==================================
 st.sidebar.title("🚲 Bike Analysis")
-st.sidebar.write("Dashboard Analisis Penyewaan Sepeda")
+st.sidebar.write("Halo, Wahyu!")
+
+# Rentang waktu
+st.sidebar.subheader("Rentang Waktu")
 
 start_date = st.sidebar.date_input(
     "Tanggal Awal",
-    df["dteday"].min()
+    df["dteday"].min(),
+    label_visibility="collapsed"
 )
 
 end_date = st.sidebar.date_input(
     "Tanggal Akhir",
-    df["dteday"].max()
+    df["dteday"].max(),
+    label_visibility="collapsed"
 )
 
+st.sidebar.markdown(
+    f"""
+    <div style="
+        background-color:#050b16;
+        padding:14px;
+        border-radius:12px;
+        font-size:20px;
+        font-weight:bold;
+        color:white;
+        text-align:center;
+        margin-bottom:20px;">
+        {start_date.strftime('%Y/%m/%d')} – {end_date.strftime('%Y/%m/%d')}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Filter suhu
+st.sidebar.subheader("Pilih Kategori Suhu")
+
+temp_options = ["Sangat Dingin", "Nyaman", "Panas"]
+
+selected_temp = st.sidebar.multiselect(
+    "",
+    options=temp_options,
+    default=temp_options,
+    label_visibility="collapsed"
+)
+
+# ==================================
+# FILTER DATA
+# ==================================
 filtered_df = df[
     (df["dteday"] >= pd.to_datetime(start_date)) &
-    (df["dteday"] <= pd.to_datetime(end_date))
+    (df["dteday"] <= pd.to_datetime(end_date)) &
+    (df["temp_category"].isin(selected_temp))
 ]
 
-
+# ==================================
 # HEADER
+# ==================================
 st.title("🚲 Bike Sharing Dashboard")
 st.markdown("Visualisasi sesuai hasil analisis pada notebook")
 
+# ==================================
 # METRICS
+# ==================================
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Total Penyewaan", int(filtered_df["cnt"].sum()))
@@ -64,8 +112,9 @@ col3.metric("Maksimum", int(filtered_df["cnt"].max()))
 
 st.markdown("---")
 
-
+# ==================================
 # VISUALISASI 1
+# ==================================
 st.subheader("1️⃣ Pengaruh Kategori Suhu terhadap Rata-rata Penyewaan")
 
 temp_df = filtered_df.groupby("temp_category")["cnt"].mean().reset_index()
@@ -85,7 +134,9 @@ st.pyplot(fig1)
 
 st.info("Kategori suhu panas memiliki rata-rata penyewaan tertinggi.")
 
+# ==================================
 # VISUALISASI 2
+# ==================================
 st.subheader("2️⃣ Jam Puncak Penyewaan Sepeda")
 
 hour_df = filtered_df.groupby("hr")["cnt"].mean().reset_index()
@@ -104,8 +155,10 @@ ax2.set_ylabel("Rata-rata Penyewaan")
 st.pyplot(fig2)
 
 st.info("Puncak penyewaan terjadi sekitar pukul 17.00.")
-=
+
+# ==================================
 # KESIMPULAN
+# ==================================
 with st.expander("📌 Lihat Detail Kesimpulan & Rekomendasi Bisnis"):
 
     col_a, col_b = st.columns(2)
@@ -126,6 +179,11 @@ with st.expander("📌 Lihat Detail Kesimpulan & Rekomendasi Bisnis"):
         - Tingkatkan layanan pada sore hari.
         """)
 
+# ==================================
+# FOOTER
+# ==================================
+st.markdown("---")
+st.caption("© 2026 Wahyu Dwi Wic
 
 # FOOTER
 st.markdown("---")
