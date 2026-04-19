@@ -12,7 +12,10 @@ st.set_page_config(
 
 
 # load data
-df = pd.read_csv("main_data.csv")
+base_path = os.path.dirname(__file__)
+file_path = os.path.join(base_path, "main_data.csv")
+
+df = pd.read_csv(file_path)
 df["dteday"] = pd.to_datetime(df["dteday"])
 
 
