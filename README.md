@@ -1,10 +1,5 @@
 # 📊 Proyek Analisis Data: Bike Sharing Dataset
 
-## 👤 Informasi Pengguna
-
-* **Nama:** Wahyu Dwi Wicaksono
-* **Email:** [wahyudwiw20@gmail.com](mailto:wahyudwiw20@gmail.com)
-* **ID Dicoding:** wahyu_dwi_wicaksono
 
 ---
 
@@ -66,7 +61,7 @@ submission/
 
 ## 🌐 Dashboard Online
 
-Link dashboard online dapat dituliskan pada file **url.txt** setelah proses deploy ke Streamlit Cloud.
+https://bike-performance.streamlit.app/
 
 ---
 
