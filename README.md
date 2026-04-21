@@ -39,7 +39,7 @@ py -m streamlit run dashboard/dashboard.py
 
 ## 🌐 Dashboard Online
 
-Jika sudah dideploy ke Streamlit Cloud, dashboard dapat diakses melalui link yang tersedia pada file `url.txt`.
+https://bike-performance.streamlit.app/
 
 
 
